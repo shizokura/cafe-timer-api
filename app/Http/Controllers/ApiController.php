@@ -59,7 +59,8 @@ class ApiController extends Controller
 
         DB::table("tbl_member")->where("member_un", $request->username)->update(
         [
-            'remaining_minutes' => $member->remaining_minutes + $code->minutes
+            'remaining_minutes' => $member->remaining_minutes + $code->minutes,
+            'points' => $member->points + ($code->minutes == 30 ? 6 : 12)
         ]);
 
         DB::table("tbl_code")->where("code_id", $code->code_id)->update(
@@ -82,6 +83,32 @@ class ApiController extends Controller
             [
                 'member_un' => $request->username,
                 'member_pw' => $request->password
+            ]);
+
+            return response()->json("success");
+        }
+        else
+        {
+            return response()->json("error");
+        }
+    }
+
+    public function claim_points(Request $request)
+    {
+        $points[50] = 30;
+        $points[100] = 60;
+        $points[200] = 180;
+        $points[300] = 300;
+
+        $minutes = $points[$request->points];
+        $member = DB::table('tbl_member')->where('member_un', $request->username)->first();
+
+        if ($member->points >= $request->points)
+        {
+            DB::table('tbl_member')->where('member_un', $request->username)->update(
+            [
+                'points' => $member->points - $request->points,
+                'remaining_minutes' => $member->remaining_minutes + $minutes 
             ]);
 
             return response()->json("success");
