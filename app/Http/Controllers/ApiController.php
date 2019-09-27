@@ -38,13 +38,18 @@ class ApiController extends Controller
 
     public function topup(Request $request)
     {
-        $code = DB::table("tbl_code")->where("code_id", $request->activation_code)->where("pin_code", $request->pin_code)->where("status", "unused")->first();
+        $code = DB::table("tbl_code")->where("code_id", $request->activation_code)->where("pin_code", $request->pin_code)->first();
 
-        $member = DB::table("tbl_member")->where("member_un", $request->username)->first();
+        $member = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
 
         if (!$code)
         {
             return response()->json("error_code");    
+        }
+
+        if ($code->status != "unused")
+        {
+            return response()->json("error_used"); 
         }
 
         if (!$member)
