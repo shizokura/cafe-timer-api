@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use DB;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -75,6 +75,15 @@ class ApiController extends Controller
             'used_date' => date("Y-m-d H:i:s")
         ]);
 
+
+        $get_member_data = DB::table("tbl_member")->where("member_un", $request->username)->first();
+
+        $insert_record["member_id"]      = $member->member_id;
+        $insert_record["code_id"]        = $code->code_id;
+        $insert_record["date_claimed"]   = date("Y-m-d H:i:s");
+
+        DB::table("tbl_code_record")->insert($insert);
+
         return response()->json("success");
     }
 
@@ -115,6 +124,13 @@ class ApiController extends Controller
                 'points' => $member->points - $request->points,
                 'remaining_minutes' => $member->remaining_minutes + $minutes 
             ]);
+
+            $insert_record["member_id"]                     = $member->member_id;
+            $insert_record["amount"]                        = $request->points;
+            $insert_record["amount_before_claimed"]         = $member->points;
+            $insert_record["date_claimed"]                  = date("Y-m-d H:i:s");
+            
+            DB::table("tbl_claim_points")->insert($insert);
 
             return response()->json("success");
         }
