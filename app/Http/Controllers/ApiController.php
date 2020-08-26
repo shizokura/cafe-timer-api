@@ -17,6 +17,71 @@ class ApiController extends Controller
         //
     }
 
+    public function viewer_online()
+    {
+        $time = Carbon::now()->subSeconds(3)->format("Y-m-d H:i:s");
+        $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
+
+        $data["get_member"] = $get_member;
+        $data["count"]      = count($get_member);
+
+
+
+        $get_duplicate_code = DB::table("tbl_code_record")
+                                ->select('tbl_code_record.code_id','pin_code','activation_code', DB::raw('count(*) as total'))
+                                ->groupBy('tbl_code_record.code_id')
+                                ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                                ->havingRaw('count(*) > 1')
+                                ->get();
+
+        $data["get_duplicate_code"] = $get_duplicate_code; 
+
+        $get_duplicate_points = DB::table("tbl_claim_points")
+                                ->select('tbl_claim_points.member_id','amount','member_un', DB::raw('count(*) as total'))
+                                ->groupBy('tbl_claim_points.member_id','amount','amount_before','date_claimed')
+                                ->join("tbl_member","tbl_member.member_id","=","tbl_claim_points.member_id")
+                                ->havingRaw('count(*) > 1')
+                                ->get();
+
+        $data["get_duplicate_points"] = $get_duplicate_points; 
+                           
+        return view('view_online',$data);
+    }
+
+    public function view_members_code(Request $request)
+    {
+        $member_id   = $request->member_id;
+        $get_code    = DB::table("tbl_code_record")->where("member_id",$member_id)->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")->get();
+
+        $data["get_code"] = $get_code;
+
+        return view('view_members_code',$data);
+    }
+
+    public function view_duplicate_code(Request $request)
+    {
+        $code_id   = $request->code_id;
+        $get_code    = DB::table("tbl_code_record")
+                        ->where("tbl_code_record.code_id",$code_id)
+                        ->join("tbl_member","tbl_member.member_id","=","tbl_code_record.member_id")
+                        ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                        ->get();
+
+        $data["get_code"] = $get_code;
+
+        return view('view_duplicate_code',$data);
+    }
+
+    public function view_member_points(Request $request)
+    {
+        $member_id     = $request->member_id;
+        $get_points    = DB::table("tbl_claim_points")->where("member_id",$member_id)->get();
+
+        $data["get_points"] = $get_points;
+
+        return view('view_member_points',$data);
+    }
+
     public function user_info(Request $request)
     {
         $member = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
