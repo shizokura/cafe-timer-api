@@ -38,7 +38,7 @@ class ApiController extends Controller
 
         $get_duplicate_points = DB::table("tbl_claim_points")
                                 ->select('tbl_claim_points.member_id','amount','member_un', DB::raw('count(*) as total'))
-                                ->groupBy('tbl_claim_points.member_id','amount','amount_before','date_claimed')
+                                ->groupBy('tbl_claim_points.member_id','member_un','amount','amount_before','date_claimed')
                                 ->join("tbl_member","tbl_member.member_id","=","tbl_claim_points.member_id")
                                 ->havingRaw('count(*) > 1')
                                 ->get();
