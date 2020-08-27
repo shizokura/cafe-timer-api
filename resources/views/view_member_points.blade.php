@@ -10,7 +10,7 @@
       <td>{{$gp->amount}}</td>      
       <td>{{$gp->amount_before}}</td>      
       <td>{{$gp->amount_before - $gp->amount}}</td>      
-      <td>{{date('F j, Y, g:i a', strtotime($gp->date_claimed)) }}</td>    
+      <td>{{date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($gp->date_claimed)->addHours(8))) }}</td>    
     </tr>
   @endforeach
 </table>

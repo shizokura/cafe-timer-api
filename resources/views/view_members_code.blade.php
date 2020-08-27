@@ -8,7 +8,7 @@
     <tr>
       <td>{{$gc->pin_code}}</td>    
       <td>{{$gc->activation_code}}</td>    
-      <td>{{date('F j, Y, g:i a', strtotime($gc->date_claimed)) }}</td>    
+      <td>{{date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($gc->date_claimed)->addHours(8))) }}</td>    
     </tr>
   @endforeach
 </table>
