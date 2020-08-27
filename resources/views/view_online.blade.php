@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Current Online : {{$count}}<h1>
-  <table style="width:100%">
+  <table style="width:100%; font-size:30px;">
     <tr>
       <th>Username</th>
       <th>Time Remaining</th>
@@ -11,7 +11,7 @@
     @foreach ($get_member as $gm)
       <tr>
         <td>{{$gm->member_un}}</td>
-        <td>{{number_format($gm->remaining_minutes,2)}}</td>
+        <td>{{date('H', mktime(0,$gm->remaining_minutes)) != 0 ? date('H', mktime(0,$gm->remaining_minutes)) . ' hours' : ''}} {{date('i', mktime(0,$gm->remaining_minutes))}} minutes </td>
         <td>{{number_format($gm->points,2)}}</td>
         <td><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">View</a></td>
         <td><a href="/view_member_points?member_id={{$gm->member_id}}" target="_blank">View</a></td>
