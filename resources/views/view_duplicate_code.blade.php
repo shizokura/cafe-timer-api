@@ -8,8 +8,8 @@
   @foreach ($get_code as $gc)
     <tr>
       <td>{{$gc->pin_code}}</td>    
-      <td>{{$gc->member_un}}</td>    
       <td>{{$gc->activation_code}}</td>    
+      <td>{{$gc->member_un}}</td>    
       <td>{{date('F j, Y, g:i a', strtotime($gc->date_claimed)) }}</td>    
     </tr>
   @endforeach
