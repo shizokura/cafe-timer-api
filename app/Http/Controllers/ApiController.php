@@ -147,7 +147,7 @@ class ApiController extends Controller
         $insert_record["code_id"]        = $code->code_id;
         $insert_record["date_claimed"]   = date("Y-m-d H:i:s");
 
-        DB::table("tbl_code_record")->insert($insert);
+        DB::table("tbl_code_record")->insert($insert_record);
 
         return response()->json("success");
     }
@@ -195,7 +195,7 @@ class ApiController extends Controller
             $insert_record["amount_before_claimed"]         = $member->points;
             $insert_record["date_claimed"]                  = date("Y-m-d H:i:s");
             
-            DB::table("tbl_claim_points")->insert($insert);
+            DB::table("tbl_claim_points")->insert($insert_record);
 
             return response()->json("success");
         }
