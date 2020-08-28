@@ -4,6 +4,8 @@
     <th>Activation Code</th>
     <th>Claimed by User</th>
     <th>Date Claimed</th>
+    <th>Before Adding Time</th>
+    <th>After Adding Time</th>
   </tr>
   @foreach ($get_code as $gc)
     <tr>
@@ -11,6 +13,8 @@
       <td>{{$gc->activation_code}}</td>    
       <td>{{$gc->member_un}}</td>    
       <td>{{date('F j, Y, g:i a', strtotime($gc->date_claimed)) }}</td>    
+      <td>{{$gc->before_adding_time}}</td>    
+      <td>{{$gc->after_adding_time}}</td>    
     </tr>
   @endforeach
 </table>
