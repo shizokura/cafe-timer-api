@@ -26,6 +26,15 @@ class ApiController extends Controller
         $data["count"]      = count($get_member);
 
 
+        $get_duplicate_code_viewed = DB::table("tbl_code_record")
+                                ->select('tbl_code_record.code_id','pin_code','activation_code', DB::raw('count(*) as total'))
+                                ->groupBy('tbl_code_record.code_id','pin_code','activation_code')
+                                ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                                ->havingRaw('count(*) > 1')
+                                ->where("viewed",0)
+                                ->get();
+
+        $data["get_duplicate_code_viewed"] = $get_duplicate_code_viewed; 
 
         $get_duplicate_code = DB::table("tbl_code_record")
                                 ->select('tbl_code_record.code_id','pin_code','activation_code', DB::raw('count(*) as total'))
@@ -68,6 +77,9 @@ class ApiController extends Controller
                         ->get();
 
         $data["get_code"] = $get_code;
+
+        $update["viewed"] = 1;
+        DB::table("tbl_code_record")->where("code_id",$code_id)->update($update);
 
         return view('view_duplicate_code',$data);
     }
@@ -122,10 +134,15 @@ class ApiController extends Controller
             return response()->json("error_member");
         }
 
+        
+
         if ($member->remaining_minutes < 0)
         {
             $member->remaining_minutes = 0;
         }
+
+        
+        $insert_record["before_adding_time"]   = $member->remaining_minutes;
 
         DB::table("tbl_member")->where("member_un", $request->username)->update(
         [
@@ -143,9 +160,10 @@ class ApiController extends Controller
 
         $get_member_data = DB::table("tbl_member")->where("member_un", $request->username)->first();
 
-        $insert_record["member_id"]      = $member->member_id;
-        $insert_record["code_id"]        = $code->code_id;
-        $insert_record["date_claimed"]   = date("Y-m-d H:i:s");
+        $insert_record["member_id"]            = $member->member_id;
+        $insert_record["code_id"]              = $code->code_id;
+        $insert_record["date_claimed"]         = date("Y-m-d H:i:s");
+        $insert_record["after_adding_time"]    = $member->remaining_minutes + $code->minutes;
 
         DB::table("tbl_code_record")->insert($insert_record);
 
@@ -184,6 +202,8 @@ class ApiController extends Controller
 
         if ($member->points >= $request->points)
         {
+            $insert_record["before_adding_time"]   = $member->remaining_minutes;
+
             DB::table('tbl_member')->where('member_un', $request->username)->update(
             [
                 'points' => $member->points - $request->points,
@@ -194,6 +214,7 @@ class ApiController extends Controller
             $insert_record["amount"]                        = $request->points;
             $insert_record["amount_before_claimed"]         = $member->points;
             $insert_record["date_claimed"]                  = date("Y-m-d H:i:s");
+            $insert_record["after_adding_time"]             = $member->remaining_minutes + $minutes;
             
             DB::table("tbl_claim_points")->insert($insert_record);
 

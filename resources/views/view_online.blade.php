@@ -26,8 +26,37 @@
   </br>
   </br>
 
+  <h1>Duplicate </h1>
+  <table style="width:100%; float:left">
+    <tr>
+      <th>Pin Code</th>
+      <th>Activation Code</th>
+      <th>Times Used</th>
+      <th>View</th>
+    </tr>
+    @foreach ($get_duplicate_code_viewed as $gdc)
+      <tr>
+        <td>{{$gdc->pin_code}}</td>    
+        <td>{{$gdc->activation_code}}</td>    
+        <td>{{$gdc->total}}</td>    
+        <td><h2><a href="/view_duplicate_code?code_id={{$gdc->code_id}}" target="_blank">View</a><h2></td>   
+      </tr>
+    @endforeach
+  </table>
 
-  <h1>Duplicate<h1>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+
   <table style="width:49%; float:left">
     <tr>
       <th>Pin Code</th>
