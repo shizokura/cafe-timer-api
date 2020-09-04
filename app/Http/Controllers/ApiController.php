@@ -212,7 +212,7 @@ class ApiController extends Controller
 
             $insert_record["member_id"]                     = $member->member_id;
             $insert_record["amount"]                        = $request->points;
-            $insert_record["amount_before_claimed"]         = $member->points;
+            $insert_record["amount_before"]                 = $member->points;
             $insert_record["date_claimed"]                  = date("Y-m-d H:i:s");
             $insert_record["after_adding_time"]             = $member->remaining_minutes + $minutes;
             
