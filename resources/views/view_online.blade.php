@@ -32,6 +32,7 @@
       <th>Pin Code</th>
       <th>Activation Code</th>
       <th>Times Used</th>
+      <th>Date Used</th>
       <th>View</th>
     </tr>
     @foreach ($get_duplicate_code_viewed as $gdc)
@@ -39,6 +40,7 @@
         <td>{{$gdc->pin_code}}</td>    
         <td>{{$gdc->activation_code}}</td>    
         <td>{{$gdc->total}}</td>    
+        <td>{{$gdc->used_date}}</td>    
         <td><h2><a href="/view_duplicate_code?code_id={{$gdc->code_id}}" target="_blank">View</a><h2></td>   
       </tr>
     @endforeach
@@ -62,6 +64,7 @@
       <th>Pin Code</th>
       <th>Activation Code</th>
       <th>Times Used</th>
+      <th>Date Used</th>
       <th>View</th>
     </tr>
     @foreach ($get_duplicate_code as $gdc)
@@ -69,6 +72,7 @@
         <td>{{$gdc->pin_code}}</td>    
         <td>{{$gdc->activation_code}}</td>    
         <td>{{$gdc->total}}</td>    
+        <td>{{$gdc->used_date}}</td>    
         <td><a href="/view_duplicate_code?code_id={{$gdc->code_id}}" target="_blank">View</a></td>   
       </tr>
     @endforeach

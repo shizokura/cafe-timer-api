@@ -19,6 +19,8 @@ class ApiController extends Controller
 
     public function viewer_online()
     {
+        date_default_timezone_set('Asia/Manila');
+
         $time = Carbon::now()->subSeconds(3)->format("Y-m-d H:i:s");
         $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
 
@@ -37,9 +39,10 @@ class ApiController extends Controller
         $data["get_duplicate_code_viewed"] = $get_duplicate_code_viewed; 
 
         $get_duplicate_code = DB::table("tbl_code_record")
-                                ->select('tbl_code_record.code_id','pin_code','activation_code', DB::raw('count(*) as total'))
+                                ->select('tbl_code_record.code_id','used_date','pin_code','activation_code', DB::raw('count(*) as total'))
                                 ->groupBy('tbl_code_record.code_id','pin_code','activation_code')
                                 ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                                ->orderBy("used_date","DESC")
                                 ->havingRaw('count(*) > 1')
                                 ->get();
 
@@ -69,6 +72,8 @@ class ApiController extends Controller
 
     public function view_duplicate_code(Request $request)
     {
+        date_default_timezone_set('Asia/Manila');
+        
         $code_id   = $request->code_id;
         $get_code    = DB::table("tbl_code_record")
                         ->where("tbl_code_record.code_id",$code_id)
