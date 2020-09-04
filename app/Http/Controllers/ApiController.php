@@ -19,8 +19,6 @@ class ApiController extends Controller
 
     public function viewer_online()
     {
-        date_default_timezone_set('Asia/Manila');
-
         $time = Carbon::now()->subSeconds(3)->format("Y-m-d H:i:s");
         $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
 
