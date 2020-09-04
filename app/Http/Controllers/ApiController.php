@@ -40,7 +40,7 @@ class ApiController extends Controller
 
         $get_duplicate_code = DB::table("tbl_code_record")
                                 ->select('tbl_code_record.code_id','used_date','pin_code','activation_code', DB::raw('count(*) as total'))
-                                ->groupBy('tbl_code_record.code_id','pin_code','activation_code')
+                                ->groupBy('tbl_code_record.code_id','pin_code','activation_code','used_date')
                                 ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
                                 ->orderBy("used_date","DESC")
                                 ->havingRaw('count(*) > 1')
