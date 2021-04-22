@@ -11,10 +11,9 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
+$router->get('/', 'FrontendController@index');
+$router->get('/codes', 'FrontendController@codes');
+$router->get('/generate_codes', 'FrontendController@generate_codes');
 $router->post('/api/user_info', 'ApiController@user_info');
 $router->post('/api/update_time', 'ApiController@update_time');
 $router->post('/api/topup', 'ApiController@topup');
