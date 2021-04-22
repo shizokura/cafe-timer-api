@@ -19,3 +19,8 @@ $router->post('/api/update_time', 'ApiController@update_time');
 $router->post('/api/topup', 'ApiController@topup');
 $router->post('/api/register', 'ApiController@register');
 $router->post('/api/claim_points', 'ApiController@claim_points');
+
+$router->get('/viewer_online', 'ApiController@viewer_online');
+$router->get('/view_members_code', 'ApiController@view_members_code');
+$router->get('/view_member_points', 'ApiController@view_member_points');
+$router->get('/view_duplicate_code', 'ApiController@view_duplicate_code');
