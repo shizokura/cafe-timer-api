@@ -4,17 +4,17 @@
     <tr>
       <th>Username</th>
       <th>Time Remaining</th>
-      <th>Points Remaining</th>
-      <th>View Topup Codes</th>
-      <th>View Claimed Points</th>
+      <th>Last Code Used</th>
+      <th>Last Date Code</th>
+      <th>Points</th>
     </tr>
     @foreach ($get_member as $gm)
       <tr>
-        <td>{{$gm->member_un}}</td>
+        <td class="{{ $gm->is_new == 1 ? 'do_green' : ''}}">{{$gm->member_un}}</td>
         <td>{{date('H', mktime(0,$gm->remaining_minutes)) != 0 ? date('H', mktime(0,$gm->remaining_minutes)) . ' hours' : ''}} {{date('i', mktime(0,$gm->remaining_minutes))}} minutes </td>
-        <td>{{number_format($gm->points,2)}}</td>
-        <td><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">View</a></td>
-        <td><a href="/view_member_points?member_id={{$gm->member_id}}" target="_blank">View</a></td>
+        <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{$gm->code_id}}</a></td>
+        <td>{{ $gm->date_last_use != "None" ? date("M m h:i:s A",strtotime($gm->date_last_use)) : "None" }} </td>
+        <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{number_format($gm->points,2)}}</a></td>
       </tr>
     @endforeach
   </table>
@@ -101,6 +101,16 @@ table, th, td
   border: 1px solid black;
   border-collapse: collapse;
   text-align: left;
+}
+.boxhead a {
+    color: black;
+    text-decoration: none;
+}
+.do_green{
+    color: #00008B;
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: none;
 }
 </style>
 

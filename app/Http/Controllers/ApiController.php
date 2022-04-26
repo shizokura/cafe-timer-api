@@ -22,6 +22,40 @@ class ApiController extends Controller
         $time = Carbon::now()->subSeconds(3)->format("Y-m-d H:i:s");
         $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
 
+        foreach($get_member as $key => $gm)
+        {
+            $last_use_code = DB::table("tbl_code_record")->where("member_id",$gm->member_id)
+                                                         ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                                                         ->orderBy("date_claimed","DESC")
+                                                         ->first();
+                                                         
+            if($last_use_code)
+            {
+                $start    = Carbon::parse($last_use_code->date_claimed);
+                $end      = Carbon::now()->timezone('Asia/Manila');
+                $mins     = $start->diffInMinutes($end);
+
+                if($mins >= 5)
+                {
+                    $is_new = 2;
+                }
+                else
+                {
+                    $is_new = 1;
+                }
+
+                $get_member[$key]->is_new        = $is_new;
+                $get_member[$key]->code_id       = $last_use_code->code_id;
+                $get_member[$key]->date_last_use = $last_use_code->date_claimed;                
+            }
+            else
+            {
+                $get_member[$key]->is_new        = 2;
+                $get_member[$key]->code_id       = "NONE";
+                $get_member[$key]->date_last_use = "NONE";
+            }
+        }
+
         $data["get_member"] = $get_member;
         $data["count"]      = count($get_member);
 
