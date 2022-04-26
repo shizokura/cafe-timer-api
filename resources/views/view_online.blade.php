@@ -12,7 +12,7 @@
       <tr>
         <td class="{{ $gm->is_new == 1 ? 'do_green' : ''}}">{{$gm->member_un}}</td>
         <td>{{date('H', mktime(0,$gm->remaining_minutes)) != 0 ? date('H', mktime(0,$gm->remaining_minutes)) . ' hours' : ''}} {{date('i', mktime(0,$gm->remaining_minutes))}} minutes </td>
-        <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{$gm->code_id}}</a></td>
+        <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{$gm->code_id}} ({{$gm->mins}})</a></td>
         <td>{{ $gm->date_last_use != "None" ? date("M m h:i:s A",strtotime($gm->date_last_use)) : "None" }} </td>
         <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{number_format($gm->points,2)}}</a></td>
       </tr>
