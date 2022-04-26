@@ -28,7 +28,11 @@ class ApiController extends Controller
                                                          ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
                                                          ->orderBy("date_claimed","DESC")
                                                          ->first();
-                                                         
+            $get_last_use_code = DB::table("tbl_code_record")->where("member_id",$gm->member_id)
+                                                         ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+                                                         ->orderBy("date_claimed","DESC")
+                                                         ->take(3)
+                                                         ->get();                                             
             if($last_use_code)
             {
                 $start    = Carbon::parse($last_use_code->date_claimed);
@@ -43,9 +47,23 @@ class ApiController extends Controller
                 {
                     $is_new = 1;
                 }
-
+                $ctr                             = 0;
+                $str                             = "";
                 $get_member[$key]->is_new        = $is_new;
-                $get_member[$key]->code_id       = $last_use_code->code_id;
+                foreach($get_last_use_code as $glucode)
+                {
+                    if($ctr == 0)
+                    {
+                        $str = $str. $glucode->code_id;
+                    }
+                    else
+                    {
+                        $str = $str.",".$glucode->code_id;
+                    }
+                    
+                    $ctr++;
+                }
+                $get_member[$key]->code_id       = $str;
                 $get_member[$key]->date_last_use = Carbon::parse($last_use_code->date_claimed)->addHours(8);                  
             }
             else

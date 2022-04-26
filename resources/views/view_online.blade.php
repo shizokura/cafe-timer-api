@@ -4,7 +4,7 @@
     <tr>
       <th>Username</th>
       <th>Time Remaining</th>
-      <th>Last Code Used</th>
+      <th>Last 3 Code Used</th>
       <th>Last Date Code</th>
       <th>Points</th>
     </tr>
