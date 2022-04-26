@@ -32,7 +32,7 @@ class ApiController extends Controller
             if($last_use_code)
             {
                 $start    = Carbon::parse($last_use_code->date_claimed);
-                $end      = Carbon::now();
+                $end      = Carbon::now()->timezone('Asia/Manila');
                 $mins     = $start->diffInMinutes($end);
 
                 if($mins >= 5)
@@ -44,14 +44,12 @@ class ApiController extends Controller
                     $is_new = 1;
                 }
 
-                $get_member[$key]->mins          = $mins;
                 $get_member[$key]->is_new        = $is_new;
                 $get_member[$key]->code_id       = $last_use_code->code_id;
-                $get_member[$key]->date_last_use = Carbon::parse($last_use_code->date_claimed)->addHours(8);                
+                $get_member[$key]->date_last_use = $last_use_code->date_claimed;                
             }
             else
             {
-                $get_member[$key]->mins          = 0;
                 $get_member[$key]->is_new        = 2;
                 $get_member[$key]->code_id       = "NONE";
                 $get_member[$key]->date_last_use = "NONE";
