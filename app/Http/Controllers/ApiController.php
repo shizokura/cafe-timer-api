@@ -46,7 +46,7 @@ class ApiController extends Controller
 
                 $get_member[$key]->is_new        = $is_new;
                 $get_member[$key]->code_id       = $last_use_code->code_id;
-                $get_member[$key]->date_last_use = $last_use_code->date_claimed;                
+                $get_member[$key]->date_last_use = Carbon::parse($last_use_code->date_claimed)->addHours(8);                  
             }
             else
             {
