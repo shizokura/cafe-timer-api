@@ -153,6 +153,13 @@ class ApiController extends Controller
     {
         $member = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
 
+        if ($member->remaining_minutes < 0)
+        {
+            return response()->json("no_time");
+        }
+
+        
+
         return response()->json($member);
     }
 
