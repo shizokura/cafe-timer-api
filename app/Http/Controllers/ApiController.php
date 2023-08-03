@@ -110,6 +110,16 @@ class ApiController extends Controller
         return view('view_online',$data);
     }
 
+    public function check_unused_code(Request $request)
+    {
+        $code_id   = $request->code_id;
+        $get_code    = DB::table("tbl_code")->where("code_id",$code_id)->leftJoin("tbl_member","tbl_member.member_id","=","tbl_code.used_by")->first();
+
+        $data["get_code"] = $get_code;
+        
+        return view('check_unused_code',$data);
+    }
+
     public function view_members_code(Request $request)
     {
         $member_id   = $request->member_id;

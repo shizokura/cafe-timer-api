@@ -21,6 +21,7 @@ $router->post('/api/register', 'ApiController@register');
 $router->post('/api/claim_points', 'ApiController@claim_points');
 
 $router->get('/viewer_online', 'ApiController@viewer_online');
+$router->get('/check_unused_code', 'ApiController@check_unused_code');
 $router->get('/view_members_code', 'ApiController@view_members_code');
 $router->get('/view_member_points', 'ApiController@view_member_points');
 $router->get('/view_duplicate_code', 'ApiController@view_duplicate_code');
