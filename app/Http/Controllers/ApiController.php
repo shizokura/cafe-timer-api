@@ -19,7 +19,7 @@ class ApiController extends Controller
 
     public function viewer_online()
     {
-        $time = Carbon::now()->subSeconds(3)->format("Y-m-d H:i:s");
+        $time = Carbon::now()->subSeconds(5)->format("Y-m-d H:i:s");
         $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
 
         foreach($get_member as $key => $gm)
@@ -168,6 +168,16 @@ class ApiController extends Controller
             return response()->json("no_time");
         }
 
+        if($member)
+        {
+            DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
+            [
+                'expected_points' => 0,
+                'enp_date_checker' => null,
+                'is_multiple_user' => "false"
+            ]);   
+        }
+
         
 
         return response()->json($member);
@@ -175,14 +185,87 @@ class ApiController extends Controller
 
     public function update_time(Request $request)
     {
-        $remaining_minutes = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->value('remaining_minutes');
+        $get_member              = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
+        $remaining_minutes       = $get_member->remaining_minutes;
+        $current_date_now        = date("Y-m-d H:i:s");
+        
+        $update_timer_amount     = 0.0166666667;
+
+        $expected_points         = null;
+        $proceed_to_checker      = false;
+        $enp_date_checker        = null;
+        $is_mulitple_check       = false;
+        $is_multiple_user        = "false";
+        $is_timer_stopping       = false;
+        if($get_member->last_update)
+        {
+            $timeFirst  = strtotime($current_date_now);
+            $timeSecond = strtotime($get_member->last_update);
+            $differenceInSeconds = $timeFirst - $timeSecond;
+
+            if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
+            {
+                $enp_strtotime          = strtotime($get_member->enp_date_checker);
+                $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
+
+                if($enpdifferenceInSeconds >= 10)
+                {
+                    $is_mulitple_check = true;
+
+                    $expected_points_check = ($remaining_minutes + ($update_timer_amount * 3) ) - $get_member->expected_next_points;
+
+                    $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+                    $enp_date_checker   = $current_date_now;
+                    $proceed_to_checker = true;  
+
+                    if($expected_points_check < 0)
+                    {
+                        $is_multiple_user = "true"; 
+                    }
+                    else
+                    {
+                        $is_multiple_user = "false";
+                    }
+                }
+            }
+            else
+            {
+                $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+                $enp_date_checker   = $current_date_now;
+                $proceed_to_checker = true;
+            }
+
+
+            
+            if($differenceInSeconds >= 5 && $differenceInSeconds <= 20)
+            {
+                $update_timer_amount = $update_timer_amount * $differenceInSeconds;
+                $is_timer_stopping = true;
+            }
+        }
+
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
         [
-            'remaining_minutes' => $remaining_minutes - 0.0166666667,
+            'remaining_minutes' => $remaining_minutes - $update_timer_amount,
             'last_update' => date("Y-m-d H:i:s")
         ]);
 
-        return response()->json($remaining_minutes - 0.0166666667);
+
+        if($is_timer_stopping != true)
+        {
+            if($proceed_to_checker == true && $expected_points)
+            {
+                DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
+                [
+                    'expected_next_points' => $expected_points,
+                    'enp_date_checker' => $enp_date_checker,
+                    'is_multiple_user' => $is_multiple_user
+                ]);    
+            }
+        }
+
+    
+        return response()->json($remaining_minutes - $update_timer_amount);
     }
 
     public function topup(Request $request)

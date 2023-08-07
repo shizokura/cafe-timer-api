@@ -16,6 +16,7 @@ $router->get('/codes', 'FrontendController@codes');
 $router->get('/generate_codes', 'FrontendController@generate_codes');
 $router->post('/api/user_info', 'ApiController@user_info');
 $router->post('/api/update_time', 'ApiController@update_time');
+$router->get('/api/update_time', 'ApiController@update_time');
 $router->post('/api/topup', 'ApiController@topup');
 $router->post('/api/register', 'ApiController@register');
 $router->post('/api/claim_points', 'ApiController@claim_points');

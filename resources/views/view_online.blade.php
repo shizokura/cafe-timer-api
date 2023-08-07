@@ -26,6 +26,7 @@
       <th>Last 3 Code Used</th>
       <th>Last Date Code</th>
       <th>Points</th>
+      <th>Multiple</th>
     </tr>
     @foreach ($get_member as $gm)
       <tr>
@@ -34,6 +35,7 @@
         <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{$gm->code_id}}</a></td>
         <td>{{ $gm->date_last_use != "None" ? date("M m h:i:s A",strtotime($gm->date_last_use)) : "None" }} </td>
         <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{number_format($gm->points,2)}}</a></td>
+        <td class="boxhead">{{$gm->is_multiple_user == "true" ? "Yes" : "No"}}</a></td>
       </tr>
     @endforeach
   </table>
