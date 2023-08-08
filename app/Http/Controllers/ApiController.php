@@ -172,7 +172,7 @@ class ApiController extends Controller
         {
             DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
             [
-                'expected_points' => 0,
+                'expected_next_points' => 0,
                 'enp_date_checker' => null,
                 'is_multiple_user' => "false"
             ]);   
