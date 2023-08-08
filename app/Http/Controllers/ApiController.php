@@ -192,19 +192,25 @@ class ApiController extends Controller
         $update_timer_amount     = 0.0166666667;
 
         $expected_points         = null;
-        $proceed_to_checker      = false;
+        $proceed_to_checker      = 0;
         $enp_date_checker        = null;
         $is_mulitple_check       = false;
         $is_multiple_user        = "false";
-        $is_timer_stopping       = false;
+        $is_timer_stopping       = 0;
         if($get_member->last_update)
         {
+            // echo "\n" ;
+            // echo "PASOK" ;
+            // echo "\n" ;
             $timeFirst  = strtotime($current_date_now);
             $timeSecond = strtotime($get_member->last_update);
             $differenceInSeconds = $timeFirst - $timeSecond;
 
             if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
             {
+                // echo "\n" ;
+                // echo "PASOK1" ;
+                // echo "\n" ;
                 $enp_strtotime          = strtotime($get_member->enp_date_checker);
                 $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
 
@@ -216,7 +222,7 @@ class ApiController extends Controller
 
                     $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
                     $enp_date_checker   = $current_date_now;
-                    $proceed_to_checker = true;  
+                    $proceed_to_checker = 1;  
 
                     if($expected_points_check < 0)
                     {
@@ -230,9 +236,12 @@ class ApiController extends Controller
             }
             else
             {
+                // echo "\n" ;
+                // echo "PASOK2" ;
+                // echo "\n" ;
                 $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
                 $enp_date_checker   = $current_date_now;
-                $proceed_to_checker = true;
+                $proceed_to_checker = 1;
             }
 
 
@@ -240,21 +249,24 @@ class ApiController extends Controller
             if($differenceInSeconds >= 5 && $differenceInSeconds <= 20)
             {
                 $update_timer_amount = $update_timer_amount * $differenceInSeconds;
-                $is_timer_stopping = true;
+                $is_timer_stopping = 1;
             }
         }
-
+        // echo $proceed_to_checker;
+        // echo "\n" ;
+        // echo "\n" ;
+        // echo "\n" ;
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
         [
             'remaining_minutes' => $remaining_minutes - $update_timer_amount,
             'last_update' => date("Y-m-d H:i:s"),
-            'test' => $remaining_minutes
+            'test' => ",".$proceed_to_checker.",".$expected_points
         ]);
 
 
-        if($is_timer_stopping != true)
+        if($is_timer_stopping != 1)
         {
-            if($proceed_to_checker == true && $expected_points)
+            if($proceed_to_checker == 1 && $expected_points)
             {
                 DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
                 [
