@@ -247,7 +247,8 @@ class ApiController extends Controller
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
         [
             'remaining_minutes' => $remaining_minutes - $update_timer_amount,
-            'last_update' => date("Y-m-d H:i:s")
+            'last_update' => date("Y-m-d H:i:s"),
+            'test' => $remaining_minutes
         ]);
 
 
