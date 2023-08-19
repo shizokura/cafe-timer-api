@@ -172,7 +172,7 @@ class ApiController extends Controller
         {
             DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
             [
-                'expected_next_points' => 0,
+                // 'expected_next_points' => 0,
                 'enp_date_checker' => null,
                 'is_multiple_user' => "false"
             ]);   
@@ -203,37 +203,37 @@ class ApiController extends Controller
             $timeSecond = strtotime($get_member->last_update);
             $differenceInSeconds = $timeFirst - $timeSecond;
 
-            if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
-            {
-                $enp_strtotime          = strtotime($get_member->enp_date_checker);
-                $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
+            // if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
+            // {
+            //     $enp_strtotime          = strtotime($get_member->enp_date_checker);
+            //     $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
 
-                if($enpdifferenceInSeconds >= 10)
-                {
-                    $is_mulitple_check = true;
+            //     if($enpdifferenceInSeconds >= 10)
+            //     {
+            //         $is_mulitple_check = true;
 
-                    $expected_points_check = ($remaining_minutes + ($update_timer_amount * 3) ) - $get_member->expected_next_points;
+            //         $expected_points_check = ($remaining_minutes + ($update_timer_amount * 3) ) - $get_member->expected_next_points;
 
-                    $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
-                    $enp_date_checker   = $current_date_now;
-                    $proceed_to_checker = 1;  
+            //         $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+            //         $enp_date_checker   = $current_date_now;
+            //         $proceed_to_checker = 1;  
 
-                    if($expected_points_check < 0)
-                    {
-                        $is_multiple_user = "true"; 
-                    }
-                    else
-                    {
-                        $is_multiple_user = "false";
-                    }
-                }
-            }
-            else
-            {
-                $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
-                $enp_date_checker   = $current_date_now;
-                $proceed_to_checker = 1;
-            }
+            //         if($expected_points_check < 0)
+            //         {
+            //             $is_multiple_user = "true"; 
+            //         }
+            //         else
+            //         {
+            //             $is_multiple_user = "false";
+            //         }
+            //     }
+            // }
+            // else
+            // {
+            //     $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+            //     $enp_date_checker   = $current_date_now;
+            //     $proceed_to_checker = 1;
+            // }
 
 
             
@@ -251,18 +251,18 @@ class ApiController extends Controller
         ]);
 
 
-        if($is_timer_stopping != 1)
-        {
-            if($proceed_to_checker == 1 && $expected_points)
-            {
-                DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
-                [
-                    'expected_next_points' => $expected_points,
-                    'enp_date_checker' => $enp_date_checker,
-                    'is_multiple_user' => $is_multiple_user
-                ]);    
-            }
-        }
+        // if($is_timer_stopping != 1)
+        // {
+        //     if($proceed_to_checker == 1 && $expected_points)
+        //     {
+        //         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
+        //         [
+        //             'expected_next_points' => $expected_points,
+        //             'enp_date_checker' => $enp_date_checker,
+        //             'is_multiple_user' => $is_multiple_user
+        //         ]);    
+        //     }
+        // }
 
     
         return response()->json($remaining_minutes - $update_timer_amount);
