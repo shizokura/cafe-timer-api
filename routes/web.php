@@ -14,14 +14,18 @@
 $router->get('/', 'FrontendController@index');
 $router->get('/codes', 'FrontendController@codes');
 $router->get('/generate_codes', 'FrontendController@generate_codes');
+$router->get('/generate_codes_receipt', 'FrontendController@generate_codes_receipt');
+$router->get('/view_generate_code_receipt', 'FrontendController@view_generate_code_receipt');
 $router->post('/api/user_info', 'ApiController@user_info');
 $router->post('/api/update_time', 'ApiController@update_time');
 // $router->get('/api/update_time', 'ApiController@update_time');
 $router->post('/api/topup', 'ApiController@topup');
+$router->get('/api/topup', 'ApiController@topup');
 $router->post('/api/register', 'ApiController@register');
 $router->post('/api/claim_points', 'ApiController@claim_points');
 
 $router->get('/viewer_online', 'ApiController@viewer_online');
+$router->get('/topup_preview', 'ApiController@topup_preview');
 $router->get('/check_unused_code', 'ApiController@check_unused_code');
 $router->get('/view_members_code', 'ApiController@view_members_code');
 $router->get('/view_member_points', 'ApiController@view_member_points');

@@ -28,14 +28,40 @@ class ApiController extends Controller
                                                          ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
                                                          ->orderBy("date_claimed","DESC")
                                                          ->first();
-            $get_last_use_code = DB::table("tbl_code_record")->where("member_id",$gm->member_id)
-                                                         ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
-                                                         ->orderBy("date_claimed","DESC")
-                                                         ->take(3)
-                                                         ->get();                                             
-            if($last_use_code)
+
+            // $get_last_use_code = DB::table("tbl_code_record")->where("member_id",$gm->member_id)
+            //                                              ->join("tbl_code","tbl_code.code_id","=","tbl_code_record.code_id")
+            //                                              ->orderBy("date_claimed","DESC")
+            //                                              ->take(3)
+            //                                              ->get();  
+
+            $get_last_use_code = [];  
+
+            $last_use_code_receipt = DB::table("tbl_code_record_receipt")->where("member_id",$gm->member_id)
+                                                                            ->join("tbl_code_receipt","tbl_code_receipt.id","=","tbl_code_record_receipt.code_id")
+                                                                            ->orderBy("date_claimed","DESC")
+                                                                            ->first();                                          
+            if($last_use_code || $last_use_code_receipt)
             {
-                $start    = Carbon::parse($last_use_code->date_claimed);
+                if($last_use_code)
+                {
+                    if($last_use_code->date_claimed >= $last_use_code_receipt->date_claimed)
+                    {
+                        $date_to_use    = $last_use_code->date_claimed;
+                        $code_to_show   = $last_use_code->code_id;
+                    }
+                    else
+                    {
+                        $date_to_use    = $last_use_code_receipt->date_claimed;
+                        $code_to_show   = $last_use_code_receipt->first_code;
+                    }
+                }
+                else
+                {
+                    $date_to_use    = $last_use_code_receipt->date_claimed;
+                    $code_to_show   = $last_use_code_receipt->first_code;
+                }
+                $start    = Carbon::parse($date_to_use);
                 $end      = Carbon::now()->timezone('Asia/Manila');
                 $mins     = $start->diffInMinutes($end);
 
@@ -49,22 +75,26 @@ class ApiController extends Controller
                 }
                 $ctr                             = 0;
                 $str                             = "";
+
+                $str                             = $code_to_show;
+
+
                 $get_member[$key]->is_new        = $is_new;
-                foreach($get_last_use_code as $glucode)
-                {
-                    if($ctr == 0)
-                    {
-                        $str = $str. $glucode->code_id;
-                    }
-                    else
-                    {
-                        $str = $str.",".$glucode->code_id;
-                    }
+                // foreach($get_last_use_code as $glucode)
+                // {
+                //     if($ctr == 0)
+                //     {
+                //         $str = $str. $glucode->code_id;
+                //     }
+                //     else
+                //     {
+                //         $str = $str.",".$glucode->code_id;
+                //     }
                     
-                    $ctr++;
-                }
+                //     $ctr++;
+                // }
                 $get_member[$key]->code_id       = $str;
-                $get_member[$key]->date_last_use = Carbon::parse($last_use_code->date_claimed)->addHours(8);                  
+                $get_member[$key]->date_last_use = Carbon::parse($date_to_use)->addHours(8);                  
             }
             else
             {
@@ -203,37 +233,37 @@ class ApiController extends Controller
             $timeSecond = strtotime($get_member->last_update);
             $differenceInSeconds = $timeFirst - $timeSecond;
 
-            // if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
-            // {
-            //     $enp_strtotime          = strtotime($get_member->enp_date_checker);
-            //     $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
+            if($get_member->enp_date_checker && $get_member->expected_next_points != 0)
+            {
+                $enp_strtotime          = strtotime($get_member->enp_date_checker);
+                $enpdifferenceInSeconds = $timeFirst - $enp_strtotime;
 
-            //     if($enpdifferenceInSeconds >= 10)
-            //     {
-            //         $is_mulitple_check = true;
+                if($enpdifferenceInSeconds >= 10)
+                {
+                    $is_mulitple_check = true;
 
-            //         $expected_points_check = ($remaining_minutes + ($update_timer_amount * 3) ) - $get_member->expected_next_points;
+                    $expected_points_check = ($remaining_minutes + ($update_timer_amount * 3) ) - $get_member->expected_next_points;
 
-            //         $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
-            //         $enp_date_checker   = $current_date_now;
-            //         $proceed_to_checker = 1;  
+                    $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+                    $enp_date_checker   = $current_date_now;
+                    $proceed_to_checker = 1;  
 
-            //         if($expected_points_check < 0)
-            //         {
-            //             $is_multiple_user = "true"; 
-            //         }
-            //         else
-            //         {
-            //             $is_multiple_user = "false";
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
-            //     $enp_date_checker   = $current_date_now;
-            //     $proceed_to_checker = 1;
-            // }
+                    if($expected_points_check < 0)
+                    {
+                        $is_multiple_user = "true"; 
+                    }
+                    else
+                    {
+                        $is_multiple_user = "false";
+                    }
+                }
+            }
+            else
+            {
+                $expected_points    = $remaining_minutes - ($update_timer_amount * 10);
+                $enp_date_checker   = $current_date_now;
+                $proceed_to_checker = 1;
+            }
 
 
             
@@ -251,27 +281,41 @@ class ApiController extends Controller
         ]);
 
 
-        // if($is_timer_stopping != 1)
-        // {
-        //     if($proceed_to_checker == 1 && $expected_points)
-        //     {
-        //         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
-        //         [
-        //             'expected_next_points' => $expected_points,
-        //             'enp_date_checker' => $enp_date_checker,
-        //             'is_multiple_user' => $is_multiple_user
-        //         ]);    
-        //     }
-        // }
+        if($is_timer_stopping != 1)
+        {
+            if($proceed_to_checker == 1 && $expected_points)
+            {
+                DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
+                [
+                    'expected_next_points' => $expected_points,
+                    'enp_date_checker' => $enp_date_checker,
+                    'is_multiple_user' => $is_multiple_user
+                ]);    
+            }
+        }
 
     
         return response()->json($remaining_minutes - $update_timer_amount);
     }
 
-    public function topup(Request $request)
+    
+    public function topup_preview(Request $request)
     {
-        $code = DB::table("tbl_code")->where("code_id", $request->activation_code)->where("pin_code", $request->pin_code)->first();
+        $quantity           = $request->quantity;
+        $data["quantity"]   = $quantity;
+        $data["wait"]       = $request->wait == 1 ? true : false;
+        $data["add_time"]   = 60 * $quantity;
+        
+        return view('generate_code_receipt',$data);
+    }
 
+    public function topup_receipt($request)
+    {
+        $first_code  = $request->activation_code;
+        $second_code = $request->pin_code;
+
+        $code = DB::table("tbl_code_receipt")->where("first_code", $first_code)->where("second_code", $second_code)->first();
+    
         $member = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
 
         if (!$code)
@@ -288,24 +332,25 @@ class ApiController extends Controller
         {
             return response()->json("error_member");
         }
-
         
-
+    
         if ($member->remaining_minutes < 0)
         {
             $member->remaining_minutes = 0;
         }
 
-        
+        $add_minutes = $code->minutes;
+        $add_points  = ($add_minutes / 60) * 12;
+
         $insert_record["before_adding_time"]   = $member->remaining_minutes;
 
         DB::table("tbl_member")->where("member_un", $request->username)->update(
         [
-            'remaining_minutes' => $member->remaining_minutes + $code->minutes,
-            'points' => $member->points + ($code->minutes == 30 ? 6 : 12)
+            'remaining_minutes' => $member->remaining_minutes + $add_minutes,
+            'points' => $member->points + $add_points
         ]);
 
-        DB::table("tbl_code")->where("code_id", $code->code_id)->update(
+        DB::table("tbl_code_receipt")->where("id", $code->id)->update(
         [
             'status' => 'used',
             'used_by' => $member->member_id,
@@ -316,13 +361,79 @@ class ApiController extends Controller
         $get_member_data = DB::table("tbl_member")->where("member_un", $request->username)->first();
 
         $insert_record["member_id"]            = $member->member_id;
-        $insert_record["code_id"]              = $code->code_id;
+        $insert_record["code_id"]              = $code->id;
         $insert_record["date_claimed"]         = date("Y-m-d H:i:s");
         $insert_record["after_adding_time"]    = $member->remaining_minutes + $code->minutes;
 
-        DB::table("tbl_code_record")->insert($insert_record);
+        DB::table("tbl_code_record_receipt")->insert($insert_record);
 
         return response()->json("success");
+    }
+
+    public function topup(Request $request)
+    {
+        $activation_code = $request->activation_code;
+        if($activation_code[0] == "W")
+        {
+            return $this->topup_receipt($request);
+        }
+        else
+        {
+            $code = DB::table("tbl_code")->where("code_id", $request->activation_code)->where("pin_code", $request->pin_code)->first();
+    
+            $member = DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->first();
+    
+            if (!$code)
+            {
+                return response()->json("error_code");    
+            }
+    
+            if ($code->status != "unused")
+            {
+                return response()->json("error_used"); 
+            }
+    
+            if (!$member)
+            {
+                return response()->json("error_member");
+            }
+    
+            
+    
+            if ($member->remaining_minutes < 0)
+            {
+                $member->remaining_minutes = 0;
+            }
+    
+            
+            $insert_record["before_adding_time"]   = $member->remaining_minutes;
+    
+            DB::table("tbl_member")->where("member_un", $request->username)->update(
+            [
+                'remaining_minutes' => $member->remaining_minutes + $code->minutes,
+                'points' => $member->points + ($code->minutes == 30 ? 6 : 12)
+            ]);
+    
+            DB::table("tbl_code")->where("code_id", $code->code_id)->update(
+            [
+                'status' => 'used',
+                'used_by' => $member->member_id,
+                'used_date' => date("Y-m-d H:i:s")
+            ]);
+    
+    
+            $get_member_data = DB::table("tbl_member")->where("member_un", $request->username)->first();
+    
+            $insert_record["member_id"]            = $member->member_id;
+            $insert_record["code_id"]              = $code->code_id;
+            $insert_record["date_claimed"]         = date("Y-m-d H:i:s");
+            $insert_record["after_adding_time"]    = $member->remaining_minutes + $code->minutes;
+    
+            DB::table("tbl_code_record")->insert($insert_record);
+    
+            return response()->json("success");
+        }
+
     }
 
     public function register(Request $request)
