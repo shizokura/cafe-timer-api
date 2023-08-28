@@ -43,7 +43,7 @@ class ApiController extends Controller
                                                                             ->first();                                          
             if($last_use_code || $last_use_code_receipt)
             {
-                if($last_use_code)
+                if($last_use_code && $last_use_code_receipt)
                 {
                     if($last_use_code->date_claimed >= $last_use_code_receipt->date_claimed)
                     {
@@ -55,6 +55,11 @@ class ApiController extends Controller
                         $date_to_use    = $last_use_code_receipt->date_claimed;
                         $code_to_show   = $last_use_code_receipt->first_code;
                     }
+                }
+                else if($last_use_code)
+                {
+                    $date_to_use    = $last_use_code->date_claimed;
+                    $code_to_show   = $last_use_code->code_id;
                 }
                 else
                 {
