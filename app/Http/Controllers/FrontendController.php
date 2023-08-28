@@ -51,11 +51,17 @@ class FrontendController extends Controller
         $digits  = 4;
         $price   = 10;
         $minutes = 60;
+        $plus_id = 1;
+        $get_last_code_id  = DB::table('tbl_code_receipt')->orderBy("date_generated","DESC")->first();
+        if($get_last_code_id)
+        {
+            $plus_id = $get_last_code_id->id;
+        }
 
         if($requested_quantity >= 1)
         {
             $code_id = DB::table('tbl_code_receipt')->insertGetId([
-                'first_code' => "W".rand(pow(10, $digits-1), pow(10, $digits)-1),
+                'first_code' => "W".rand(pow(10, $digits-1), pow(10, $digits)-1).$get_last_code_id->id,
                 'second_code' => rand(pow(10, $digits-1), pow(10, $digits)-1),
                 'price' => $price * $requested_quantity,
                 'minutes' => $minutes * $requested_quantity,
