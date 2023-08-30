@@ -1,19 +1,19 @@
 <body id="print_container">
         <input type="hidden" id="code_id_container" value="{{$code->id}}"/>
         <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
-            ID# {{$code->id}}
+            ID# {{$code->id}} Date Generated:</br>{{date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($code->date_generated)->addHours(8))) }}
         </div>
-        <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
+        <!-- <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
             Date Generated:</br>{{date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($code->date_generated)->addHours(8))) }}
-        </div>
-        </br>
-        <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
+        </div> -->
+        <!-- </br> -->
+        <!-- <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
             Price: PHP {{number_format($code->price)}}
-        </div>
+        </div> -->
         <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">
             Time: {{$code->minutes / 60}} Hour/s
         </div>
-        </br>
+        <!-- </br> -->
         <div style="margin: auto; font-family: 'Arial'; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:12px;">
             Activation Code: <span style=" text-decoration: underline; font-weight: bold;">{{$code->first_code}}</span>
         </div>

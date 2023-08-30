@@ -410,24 +410,16 @@ function setHtmlPrint(codes)
 
   var string_html = "";
       string_html = string_html +'<body id="print_container">'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">'
-      string_html = string_html + '    ID# '+code.id
+      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:13px;">'
+      string_html = string_html + '    ID# '+code.id+'Date Generated:'+codes.date_format+'</br>'
       string_html = string_html + '</div>'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">'
-      string_html = string_html + '    Date Generated:'+codes.date_format+'</br>'
-      string_html = string_html + '</div>'
-      string_html = string_html + '</br>'
-      string_html = string_html + '<div style="margin: auto; page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">'
-      string_html = string_html + '    Price: PHP '+codes.price
-      string_html = string_html + '</div>'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:10px;">'
+      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:13px;">'
       string_html = string_html + '    Time:'+codes.time+" Hour/s"
       string_html = string_html + '</div>'
-      string_html = string_html + '</br>'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:12px;">'
+      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:15px;">'
       string_html = string_html + '    Activation Code: <span style=" text-decoration: underline; font-weight: bold;">'+code.first_code+'</span>'
       string_html = string_html + '</div>'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:12px;">'
+      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:15px;">'
       string_html = string_html + '    Pin Code:<span style=" text-decoration: underline; font-weight: bold;">'+code.second_code+'</span>'
       string_html = string_html + '</div>'
       string_html = string_html + '</br>'
