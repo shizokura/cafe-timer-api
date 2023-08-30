@@ -411,9 +411,6 @@ function setHtmlPrint(codes)
   var string_html = "";
       string_html = string_html +'<body id="print_container">'
       string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:13px;">'
-      string_html = string_html + '    ID# '+code.id+'Date Generated:'+codes.date_format+'</br>'
-      string_html = string_html + '</div>'
-      string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:13px;">'
       string_html = string_html + '    Time:'+codes.time+" Hour/s"
       string_html = string_html + '</div>'
       string_html = string_html + '<div style="margin: auto;  page-break-inside: avoid; break-inside: avoid; text-align: center; font-size:15px;">'
