@@ -51,7 +51,7 @@
         <td>{{date('H', mktime(0,$gm->remaining_minutes)) != 0 ? date('H', mktime(0,$gm->remaining_minutes)) . ' hours' : ''}} {{date('i', mktime(0,$gm->remaining_minutes))}} minutes </td>
         <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{$gm->code_id}}</a></td>
         <td>{{ $gm->date_last_use != "None" ? date("M d h:i:s A",strtotime($gm->date_last_use)) : "None" }} </td>
-        <td class="boxhead"><a href="/view_members_code?member_id={{$gm->member_id}}" target="_blank">{{number_format($gm->points,2)}}</a></td>
+        <td class="boxhead"><a href="/view_member_points?member_id={{$gm->member_id}}" target="_blank">{{number_format($gm->points,2)}}</a></td>
         <td class="boxhead">{{$gm->is_multiple_user == "true" ? "Yes" : "No"}}</a></td>
       </tr>
     @endforeach

@@ -187,7 +187,7 @@ class ApiController extends Controller
     public function view_member_points(Request $request)
     {
         $member_id     = $request->member_id;
-        $get_points    = DB::table("tbl_claim_points")->where("member_id",$member_id)->get();
+        $get_points    = DB::table("tbl_claim_points")->orderBy("date_claimed","DESC")->where("member_id",$member_id)->get();
 
         $data["get_points"] = $get_points;
 
@@ -272,11 +272,11 @@ class ApiController extends Controller
 
 
             
-            if($differenceInSeconds >= 5 && $differenceInSeconds <= 20)
-            {
-                $update_timer_amount = $update_timer_amount * $differenceInSeconds;
-                $is_timer_stopping = 1;
-            }
+            // if($differenceInSeconds >= 5 && $differenceInSeconds <= 20)
+            // {
+            //     $update_timer_amount = $update_timer_amount * $differenceInSeconds;
+            //     $is_timer_stopping = 1;
+            // }
         }
 
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
