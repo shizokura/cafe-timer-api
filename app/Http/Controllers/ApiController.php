@@ -19,7 +19,7 @@ class ApiController extends Controller
 
     public function viewer_online()
     {
-        $time = Carbon::now()->subSeconds(5)->format("Y-m-d H:i:s");
+        $time = Carbon::now()->subSeconds(8)->format("Y-m-d H:i:s");
         $get_member = DB::table("tbl_member")->where("last_update",">=",$time)->get();
 
         foreach($get_member as $key => $gm)
@@ -272,11 +272,11 @@ class ApiController extends Controller
 
 
             
-            // if($differenceInSeconds >= 8 && $differenceInSeconds <= 20)
-            // {
-            //     $update_timer_amount = $update_timer_amount * $differenceInSeconds;
-            //     $is_timer_stopping = 1;
-            // }
+            if($differenceInSeconds >= 8 && $differenceInSeconds <= 20)
+            {
+                $update_timer_amount = $update_timer_amount * $differenceInSeconds;
+                $is_timer_stopping = 1;
+            }
         }
 
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
