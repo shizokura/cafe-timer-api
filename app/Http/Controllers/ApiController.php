@@ -272,11 +272,11 @@ class ApiController extends Controller
 
 
             
-            if($differenceInSeconds >= 5 && $differenceInSeconds <= 20)
-            {
-                $update_timer_amount = $update_timer_amount * $differenceInSeconds;
-                $is_timer_stopping = 1;
-            }
+            // if($differenceInSeconds >= 8 && $differenceInSeconds <= 20)
+            // {
+            //     $update_timer_amount = $update_timer_amount * $differenceInSeconds;
+            //     $is_timer_stopping = 1;
+            // }
         }
 
         DB::table("tbl_member")->where("member_un", $request->username)->where("member_pw", $request->password)->update(
