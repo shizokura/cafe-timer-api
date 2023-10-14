@@ -274,8 +274,8 @@ class ApiController extends Controller
             
             if($differenceInSeconds >= 8 && $differenceInSeconds <= 20)
             {
-                $update_timer_amount = $update_timer_amount * $differenceInSeconds;
-                $is_timer_stopping = 1;
+                // $update_timer_amount = $update_timer_amount * $differenceInSeconds;
+                // $is_timer_stopping = 1;
             }
         }
 
