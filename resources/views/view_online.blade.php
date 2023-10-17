@@ -72,7 +72,7 @@
         <td>W{{$gl->id}}***</td>
         <td>{{$gl->minutes}} {{$gl->minutes > 1 ? 'minute' : 'minutes'}}</td>
         <td>{{ $gl->member_un ? $gl->member_un : '------'}}</td>
-        <td>{{ $gl->date_generated != "None" ? date("M d h:i:s A",strtotime($gl->date_generated)) : "None" }} </td>
+        <td>{{ $gl->date_generated != "None" ? date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($gl->date_generated)->addHours(8))) : "None" }} </td>
       </tr>
     @endforeach
   </table>
