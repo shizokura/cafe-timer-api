@@ -141,7 +141,15 @@ class ApiController extends Controller
                                 ->get();
 
         $data["get_duplicate_points"] = $get_duplicate_points; 
-                           
+
+        $get_latest_code_receipt = DB::table("tbl_code_receipt")
+                                    ->orderBy("date_generated","DESC")
+                                    ->leftJoin("tbl_member","tbl_member.member_id","=","tbl_code_receipt.used_by")
+                                    ->take(3)
+                                    ->get();
+
+        $data["get_latest_code_receipt"] = $get_latest_code_receipt;   
+        // dd($get_latest_code_receipt);   
         return view('view_online',$data);
     }
 

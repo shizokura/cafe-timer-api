@@ -58,6 +58,25 @@
   </table>
 
   </br>
+
+  <h1>Latest Code<h1>
+  <table style="width:100%; font-size:30px;">
+    <tr>
+      <th>Code</th>
+      <th>Time</th>
+      <th>Used By</th>
+      <th>Date Generated</th>
+    </tr>
+    @foreach ($get_latest_code_receipt as $gl)
+      <tr>
+        <td>W{{$gl->id}}***</td>
+        <td>{{$gl->minutes}} {{$gl->minutes > 1 ? 'minute' : 'minutes'}}</td>
+        <td>{{ $gl->member_un ? $gl->member_un : '------'}}</td>
+        <td>{{ $gl->date_generated != "None" ? date("M d h:i:s A",strtotime($gl->date_generated)) : "None" }} </td>
+      </tr>
+    @endforeach
+  </table>
+  
   </br>
   </br>
   </br>
