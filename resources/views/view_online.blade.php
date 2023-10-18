@@ -70,7 +70,7 @@
     @foreach ($get_latest_code_receipt as $gl)
       <tr>
         <td>W{{$gl->id}}***</td>
-        <td>{{$gl->minutes}} {{$gl->minutes > 1 ? 'minute' : 'minutes'}}</td>
+        <td>{{$gl->minutes}} {{$gl->minutes > 1 ? 'minutes' : 'minute'}}</td>
         <td>{{ $gl->member_un ? $gl->member_un : '------'}}</td>
         <td>{{ $gl->date_generated != "None" ? date('F j, Y, g:i a', strtotime(Carbon\Carbon::parse($gl->date_generated)->addHours(8))) : "None" }} </td>
       </tr>
